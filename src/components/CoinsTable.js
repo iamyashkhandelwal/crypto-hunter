@@ -103,11 +103,11 @@ const CoinsTable = () => {
                 varient="h4"
                 style={{
                     fontWeight: "lighter",
-                    fontSize: 22,
+                    fontSize: 32,
                     margin: 18,
                     fontFamily: "Poppins" 
                 }}>
-                Cryptocurrency Proces by Market Cap
+                Cryptocurrency Prices by Market Cap
             </Typography>
 
             <TextField
