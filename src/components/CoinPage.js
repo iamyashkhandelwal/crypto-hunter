@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom'
 import { SingleCoin } from '../api/CoinGekoAPI'
 import { CryptoState } from '../CryptoContext'
 import CoinChart from './CoinChart'
-// import ReactHtmlParser from 'react-html-parser';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -77,27 +76,26 @@ const CoinPage = () => {
 
   const {id} = useParams();
   // console.log(id);
-  const fetchCoinData = async () => {
-    const {data} = await axios.get(SingleCoin(id));
-
-    const requiredCoinData = {
-      id: data.id,
-      name: data.name,
-      symbol: data.symbol,
-      image: data.image.large,
-      desc: data.description.en.split(". ")[0],
-      rank: data.coingecko_rank,
-      price: data.market_data.current_price[currency.toLowerCase()],
-      marketCap: data.market_data.market_cap[currency.toLowerCase()].toString().slice(0, -6)
-    }
-
-    // console.log(requiredCoinData);
-    setCoinData(requiredCoinData);
-    // console.log(data);
-  }
 
   useEffect(() => {
-    // console.log("useEffect()");
+    const fetchCoinData = async () => {
+      const {data} = await axios.get(SingleCoin(id));
+  
+      const requiredCoinData = {
+        id: data.id,
+        name: data.name,
+        symbol: data.symbol,
+        image: data.image.large,
+        desc: data.description.en.split(". ")[0],
+        rank: data.coingecko_rank,
+        price: data.market_data.current_price[currency.toLowerCase()],
+        marketCap: data.market_data.market_cap[currency.toLowerCase()].toString().slice(0, -6)
+      }
+  
+      // console.log(requiredCoinData);
+      setCoinData(requiredCoinData);
+    }
+  
     fetchCoinData();
   }, [currency])
 
@@ -105,7 +103,6 @@ const CoinPage = () => {
   // console.log(coinData);
 
   if(!Object.keys(coinData).length){
-    console.log("loading....")
     return <LinearProgress style={{backgroundColor: "gold"}}/>
   }
 
@@ -114,6 +111,7 @@ const CoinPage = () => {
     <div className={classes.container}>
       <div className={classes.sidebar}>
               <img
+                alt={coinData.name}
                 src={coinData?.image}
                 className={classes.logo} />
 
@@ -166,9 +164,6 @@ const CoinPage = () => {
                 </span>
               </div>
 
-              {/* <h2 className={classes.rank}>
-      Rank : {coinData?.rank}
-    </h2> */}
             </div>
             <CoinChart id={id}/>
 

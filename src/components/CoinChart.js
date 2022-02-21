@@ -1,4 +1,4 @@
-import { Button, CircularProgress, makeStyles } from '@material-ui/core'
+import { CircularProgress, makeStyles } from '@material-ui/core'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import {Line} from 'react-chartjs-2'
@@ -24,8 +24,6 @@ const chartDays = [
       value: 365,
     },
   ];
-
-const selectedButton = false;
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -67,19 +65,16 @@ const CoinChart = ({id}) => {
     const [days, setDays] = useState(1);
     const [flag, setFlag] = useState(false);
 
-    const {currency, symbol} = CryptoState();
+    const {currency} = CryptoState();
     const classes = useStyles();
 
-    const fetchHistoricData = async () => {
-        const { data } = await axios.get(HistoricalChart(id, days, currency))
-        
-        console.log(data);
-        setHistoricData(data.prices);
-    }
-
-    console.log(days);
-
     useEffect(() => {
+        const fetchHistoricData = async () => {
+            const { data } = await axios.get(HistoricalChart(id, days, currency))
+            
+            setHistoricData(data.prices);
+        }
+
         fetchHistoricData();
         setFlag(true);
     }, [days])
@@ -105,7 +100,7 @@ const CoinChart = ({id}) => {
                         date.getHours() > 12
                         ? `${date.getHours() - 12}:${date.getMinutes()} PM`
                         : `${date.getHours()}:${date.getMinutes()} AM`;
-                    console.log(time);
+
                     return days === 1 ? time : date.toLocaleDateString();
                 }),
 
@@ -140,7 +135,7 @@ const CoinChart = ({id}) => {
                         className={classes.daysButton} 
                         onClick={() => {
                             setDays(day.value)
-                            selectedButton = true}}
+                            }}
                     >
                         {day.label}
                     </button>

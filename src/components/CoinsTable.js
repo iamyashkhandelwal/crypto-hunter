@@ -64,29 +64,29 @@ const CoinsTable = () => {
 
     const {currency, symbol} = CryptoState();
 
-    const fetchCoinsList = async () => {
-        setLoading(true);
-        const {data} = await axios.get(CoinList(currency));
-
-        // console.log(data);
-        const requiredData = data.map((coin) => {
-            return({
-                id: coin.id,
-                name: coin.name,
-                logo: coin.image,
-                symbol: coin.symbol,
-                price: coin.current_price,
-                change: coin.price_change_percentage_24h.toFixed(2),
-                marketCap: coin.market_cap
-            })
-        })
-
-        setCoinsList(requiredData);
-        // console.log(data);
-        setLoading(false);
-    }
-
     useEffect(() => {
+        const fetchCoinsList = async () => {
+            setLoading(true);
+            const {data} = await axios.get(CoinList(currency));
+    
+            // console.log(data);
+            const requiredData = data.map((coin) => {
+                return({
+                    id: coin.id,
+                    name: coin.name,
+                    logo: coin.image,
+                    symbol: coin.symbol,
+                    price: coin.current_price,
+                    change: coin.price_change_percentage_24h.toFixed(2),
+                    marketCap: coin.market_cap
+                })
+            })
+    
+            setCoinsList(requiredData);
+            // console.log(data);
+            setLoading(false);
+        }
+
         fetchCoinsList();
     }, [currency]);
 
@@ -136,8 +136,13 @@ const CoinsTable = () => {
                                 <TableCell style={{
                                     color: "black",
                                     fontSize: 18,
-                                    fontWeight: "bold"}}
-                                    align= {cell === "Coin" ? "" : "right"}>{cell}</TableCell>
+                                    fontWeight: "bold"
+                                    }}
+                                    align= {cell === "Coin" ? "left" : "right"}
+                                    key={cell}
+                                >
+                                    {cell}
+                                </TableCell>
                             ))}
                             
                             {/* <TableCell align='right'>Price</TableCell>
@@ -151,15 +156,16 @@ const CoinsTable = () => {
                             .map((coin) => {
                             let profit = coin.change >= 0;
                             return(
-                                <TableRow onClick={() => navigate(`/coin/${coin.id}`)}
+                                <TableRow key={coin.id} onClick={() => navigate(`/coin/${coin.id}`)}
                                 className={classes.row}>
                                     <TableCell 
                                         style={{
                                             display: 'flex',
                                             gap: 15,
-                                            fontSize: 18}}
+                                            fontSize: 18
+                                        }}
                                     >  
-                                            <img className={classes.logo} src={coin.logo}/>
+                                            <img className={classes.logo} alt={coin.name} src={coin.logo}/>
                                             <div className={classes.coinInfo}>
                                                 <span>{(coin.symbol).toUpperCase()}</span>
                                                 <span style={{color: 'grey', fontSize: 15}}>{coin.name}</span>
@@ -197,7 +203,7 @@ const CoinsTable = () => {
             <Pagination
                 className={classes.pagination} 
                 classes={{ ul: classes.pageUL }}
-                count={(handleSearch().length/10).toFixed(0)}
+                count={Number((handleSearch().length/10).toFixed(0))}
                 page={page}
                 onChange={(e, val) => {
                     setPage(val)
